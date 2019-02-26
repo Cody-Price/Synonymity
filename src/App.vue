@@ -1,27 +1,88 @@
 <template>
-  <div id="app">
-    <Header msg="Welcome to Your Vue.js App"/>
+  <div id="app" v-on:click="click">
+    <Header />
+    <Search 
+      :generateUrl="generateUrl"
+      />
+    <CardContainer 
+      :synArray="synArray"
+      :generateUrl="generateUrl"
+      />
   </div>
 </template>
 
 <script>
+
 import Header from './components/Header.vue'
+import Search from './components/Search.vue'
+import CardContainer from './components/CardContainer.vue'
+import apiKey from '../utilities/apiKey.js'
 
 export default {
   name: 'app',
   components: {
-    Header
+    Header,
+    Search,
+    CardContainer
+  },
+  data() {
+    return {
+      synArray: []
+    }
+  },
+  methods: {
+    generateUrl: async function(word) {
+      let url = "https://dictionaryapi.com/api/v3/references/thesaurus/json/" + word.toLowerCase() + "?key=" + apiKey
+      console.log(url)
+      try {
+        let response = await fetch(url)
+        let result = await response.json()
+        let synonyms = result[0].meta.syns
+        let cleanResults = synonyms.reduce((acc, currVal) => {
+          currVal.forEach(synonym => {
+            acc.push(synonym)
+          })
+          return acc
+        }, [])
+        console.log(cleanResults)
+        this.$data.synArray = cleanResults
+      } catch(err) {
+        console.log(err)
+      }
+    },
+    click: function(event) {
+      console.log(event.target)
+    }
   }
 }
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Crete+Round');
+
+* {
+  font-family: 'Crete Round', Arial, Helvetica, sans-serif;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  height: 96vh;
+}
+
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background-image: url("../library-desk.jpg");
+  background-size: cover;
+  min-height: 103vh;
+  width: 100vw;
+  position: relative;
+  top: -25px;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  margin: none;
+  padding: none;
 }
 </style>

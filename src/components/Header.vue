@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header id="Header">
     <h1>Synonymity</h1>
   </header>
 </template>
@@ -15,7 +15,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#Header {
+  padding: 1px;
+  background-color: rgba(0, 0, 0, 0.61);
+}
+
 h1 {
-  color: red;
+  color: white;
+  font-size: 3.5rem;
 }
 </style>
