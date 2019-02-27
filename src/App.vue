@@ -1,5 +1,5 @@
 <template>
-  <div id="app" v-on:click="click">
+  <div id="app">
     <Header />
     <Search 
       :generateUrl="generateUrl"
@@ -33,7 +33,6 @@ export default {
   methods: {
     generateUrl: async function(word) {
       let url = "https://dictionaryapi.com/api/v3/references/thesaurus/json/" + word.toLowerCase() + "?key=" + apiKey
-      console.log(url)
       try {
         let response = await fetch(url)
         let result = await response.json()
@@ -44,14 +43,10 @@ export default {
           })
           return acc
         }, [])
-        console.log(cleanResults)
         this.$data.synArray = cleanResults
       } catch(err) {
-        console.log(err)
+        this.$data.synArray = err
       }
-    },
-    click: function(event) {
-      console.log(event.target)
     }
   }
 }
